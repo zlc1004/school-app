@@ -1,0 +1,37 @@
+<!DOCTYPE html><html>
+<head><meta charset="utf-8"><title>user gui</title></head>
+<body><div id="divwithid"></div>
+  <video id="player" controls autoplay></video>
+  <button id="capture">Capture</button>
+  <canvas id="canvas" width="320" height="240"></canvas>
+  <iframe src="https://10.15.48.42:32431/" frameborder="0" id="iframe_"></iframe>
+    <script>
+const player = document.getElementById('player');
+const canvas = document.getElementById('canvas');
+const context = canvas.getContext('2d');
+const captureButton = document.getElementById('capture');
+
+const constraints = {
+  video: true,
+};
+
+captureButton.addEventListener('click', () => {
+  // Draw the video frame to the canvas.
+  context.drawImage(player, 0, 0, canvas.width, canvas.height);
+  fetch('https://10.15.48.42:32431/api/api1/', {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ "data": canvas.toDataURL().split(",")[1] })
+})
+});
+
+// Attach the video stream to the video element and autoplay.
+navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+  player.srcObject = stream;
+});
+    </script>
+
+</body></html>
